@@ -1,4 +1,4 @@
-package live.smoothing.smoothingactuator;
+package live.smoothing.actuator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

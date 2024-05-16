@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>live.smoothing</groupId>
-    <artifactId>smoothing-actuator</artifactId>
+    <artifactId>actuator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>smoothing-actuator</name>
+    <name>actuator</name>
     <description>smoothing-actuator</description>
     <properties>
         <java.version>11</java.version>
