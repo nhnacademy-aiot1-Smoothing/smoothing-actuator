@@ -21,6 +21,7 @@ public class RabbitMQConnection {
     public Connection createConnection() throws IOException, TimeoutException {
 
         ConnectionFactory factory = new ConnectionFactory();
+
         factory.setHost(config.getServer());
         factory.setPort(config.getPort());
         factory.setVirtualHost(config.getVirtualHost());
@@ -33,5 +34,4 @@ public class RabbitMQConnection {
     public Channel createChannel(Connection connection) throws IOException {
         return connection.createChannel();
     }
-
 }
