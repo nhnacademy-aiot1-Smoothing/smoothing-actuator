@@ -1,8 +1,8 @@
-package live.smoothing.smoothingactuator.checker.impl;
+package live.smoothing.actuator.checker.impl;
 
-import live.smoothing.smoothingactuator.checker.ConditionChecker;
-import live.smoothing.smoothingactuator.config.ConditionSettings;
-import live.smoothing.smoothingactuator.dto.DataDTO;
+import live.smoothing.actuator.checker.ConditionChecker;
+import live.smoothing.actuator.config.ConditionSettings;
+import live.smoothing.actuator.dto.DataDTO;
 import org.springframework.stereotype.Component;
 
 @Component("co2Checker")

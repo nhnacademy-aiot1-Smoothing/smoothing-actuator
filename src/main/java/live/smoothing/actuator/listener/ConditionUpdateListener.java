@@ -1,8 +1,8 @@
-package live.smoothing.smoothingactuator.listener;
+package live.smoothing.actuator.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import live.smoothing.smoothingactuator.config.ConditionSettings;
-import live.smoothing.smoothingactuator.service.ConditionSettingsService;
+import live.smoothing.actuator.config.ConditionSettings;
+import live.smoothing.actuator.service.ConditionSettingsService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

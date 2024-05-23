@@ -1,9 +1,9 @@
-package live.smoothing.smoothingactuator.connect;
+package live.smoothing.actuator.connect;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import live.smoothing.smoothingactuator.config.RabbitMQConfig;
+import live.smoothing.actuator.config.RabbitMQConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;

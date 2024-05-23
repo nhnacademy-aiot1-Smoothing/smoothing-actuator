@@ -1,10 +1,10 @@
-package live.smoothing.smoothingactuator.listener;
+package live.smoothing.actuator.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import live.smoothing.smoothingactuator.checker.ConditionChecker;
-import live.smoothing.smoothingactuator.config.ConditionSettings;
-import live.smoothing.smoothingactuator.dto.DataDTO;
-import live.smoothing.smoothingactuator.service.ConditionSettingsService;
+import live.smoothing.actuator.checker.ConditionChecker;
+import live.smoothing.actuator.config.ConditionSettings;
+import live.smoothing.actuator.dto.DataDTO;
+import live.smoothing.actuator.service.ConditionSettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;

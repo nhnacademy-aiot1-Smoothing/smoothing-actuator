@@ -1,4 +1,4 @@
-package live.smoothing.smoothingactuator.dto;
+package live.smoothing.actuator.dto;
 
 import lombok.Getter;
 import lombok.Setter;

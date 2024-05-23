@@ -1,4 +1,4 @@
-package live.smoothing.smoothingactuator.config;
+package live.smoothing.actuator.config;
 
 import lombok.Getter;
 import lombok.Setter;

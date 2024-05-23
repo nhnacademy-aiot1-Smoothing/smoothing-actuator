@@ -1,8 +1,8 @@
-package live.smoothing.smoothingactuator.listener;
+package live.smoothing.actuator.listener;
 
-import live.smoothing.smoothingactuator.config.ConditionSettings;
-import live.smoothing.smoothingactuator.dto.DataDTO;
-import live.smoothing.smoothingactuator.service.ConditionSettingsService;
+import live.smoothing.actuator.config.ConditionSettings;
+import live.smoothing.actuator.dto.DataDTO;
+import live.smoothing.actuator.service.ConditionSettingsService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;

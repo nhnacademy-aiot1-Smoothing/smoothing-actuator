@@ -1,6 +1,6 @@
-package live.smoothing.smoothingactuator.service;
+package live.smoothing.actuator.service;
 
-import live.smoothing.smoothingactuator.config.ConditionSettings;
+import live.smoothing.actuator.config.ConditionSettings;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
