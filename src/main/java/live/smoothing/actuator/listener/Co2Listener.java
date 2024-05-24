@@ -1,29 +1,38 @@
 package live.smoothing.actuator.listener;
 
-import live.smoothing.actuator.config.ConditionSettings;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class Co2Listener extends BaseListener {
 
-    public Co2Listener(RabbitTemplate rabbitTemplate, ApplicationContext applicationContext, ConditionSettingsService conditionSettingsService) {
+    public Co2Listener(RabbitTemplate rabbitTemplate,
+                       ApplicationContext applicationContext,
+                       ConditionSettingsService conditionSettingsService,
+                       RabbitMQProperties properties,
+                       ObjectMapper objectMapper) {
 
-        super(rabbitTemplate, applicationContext, conditionSettingsService);
+        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper);
     }
 
-    @RabbitListener(queues = "co2-queue")
+    @RabbitListener(queues = "#{rabbitMQProperties.co2queueName}")
     public void receiveMessage(String message) {
+        log.info("Received message from co2-queue: {}", message);
         handleMessage(message, "co2Checker");
+
     }
 
     @Override
-    protected String createControlMessage(DataDTO data, ConditionSettings.DeviceCondition settings) {
+    protected String createControlMessage(DataDTO data) {
 
-        return "";
+        return "red";
     }
 }

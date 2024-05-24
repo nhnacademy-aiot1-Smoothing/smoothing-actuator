@@ -1,21 +1,38 @@
 package live.smoothing.actuator.config;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Getter
-@Setter
 @Configuration
-@ConfigurationProperties(prefix = "mq")
 public class RabbitMQConfig {
 
-    private String server;
-    private int port;
-    private String queueName;
-    private String routingKey;
-    private String virtualHost;
-    private String username;
-    private String password;
+    private final RabbitMQProperties properties;
+
+    public RabbitMQConfig(RabbitMQProperties properties) {
+        this.properties = properties;
+    }
+
+    @Bean
+    public CachingConnectionFactory connectionFactory() {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setHost(properties.getServer());
+        connectionFactory.setPort(properties.getPort());
+        connectionFactory.setVirtualHost(properties.getVirtualHost());
+        connectionFactory.setUsername(properties.getUsername());
+        connectionFactory.setPassword(properties.getPassword());
+        return connectionFactory;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(CachingConnectionFactory connectionFactory) {
+        return new RabbitTemplate(connectionFactory);
+    }
+
+    @Bean
+    public Queue co2Queue() {
+        return new Queue(properties.getCo2queueName(), true);
+    }
 }

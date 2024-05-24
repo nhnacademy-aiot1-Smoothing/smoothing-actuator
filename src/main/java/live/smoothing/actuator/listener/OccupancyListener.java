@@ -1,6 +1,7 @@
 package live.smoothing.actuator.listener;
 
-import live.smoothing.actuator.config.ConditionSettings;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -11,9 +12,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class OccupancyListener extends BaseListener{
 
-    public OccupancyListener(RabbitTemplate rabbitTemplate, ApplicationContext applicationContext, ConditionSettingsService conditionSettingsService) {
+    public OccupancyListener(RabbitTemplate rabbitTemplate,
+                             ApplicationContext applicationContext,
+                             ConditionSettingsService conditionSettingsService,
+                             ObjectMapper objectMapper,
+                             RabbitMQProperties properties) {
 
-        super(rabbitTemplate, applicationContext, conditionSettingsService);
+        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper);
     }
 
     @RabbitListener(queues = "occupancy-queue")
@@ -22,7 +27,7 @@ public class OccupancyListener extends BaseListener{
     }
 
     @Override
-    protected String createControlMessage(DataDTO data, ConditionSettings.DeviceCondition settings) {
+    protected String createControlMessage(DataDTO data) {
 
         return "";
     }

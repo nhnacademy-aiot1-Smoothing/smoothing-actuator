@@ -5,5 +5,5 @@ import live.smoothing.actuator.dto.DataDTO;
 
 public interface ConditionChecker {
 
-    boolean checkCondition(DataDTO data, ConditionSettings.DeviceCondition settings);
+    boolean checkCondition(DataDTO data);
 }

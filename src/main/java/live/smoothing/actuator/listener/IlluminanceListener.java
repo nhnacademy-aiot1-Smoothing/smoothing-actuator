@@ -1,27 +1,36 @@
 package live.smoothing.actuator.listener;
 
-import live.smoothing.actuator.config.ConditionSettings;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class IlluminanceListener extends BaseListener {
 
-    public IlluminanceListener(RabbitTemplate rabbitTemplate, ApplicationContext applicationContext, ConditionSettingsService conditionSettingsService) {
-        super(rabbitTemplate, applicationContext, conditionSettingsService);
+    public IlluminanceListener(RabbitTemplate rabbitTemplate,
+                               ApplicationContext applicationContext,
+                               ConditionSettingsService conditionSettingsService,
+                               RabbitMQProperties properties,
+                               ObjectMapper objectMapper) {
+
+        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper);
     }
 
     @RabbitListener(queues = "illuminance-queue")
     public void receiveMessage(String message) {
+        log.info("Received Message from illuminance-queue");
         handleMessage(message, "illuminanceChecker");
     }
 
     @Override
-    protected String createControlMessage(DataDTO data, ConditionSettings.DeviceCondition settings) {
+    protected String createControlMessage(DataDTO data) {
 
         return "";
     }

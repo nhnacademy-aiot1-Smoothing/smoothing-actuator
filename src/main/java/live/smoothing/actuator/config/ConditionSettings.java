@@ -5,24 +5,16 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Map;
-
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "conditions")
+@ConfigurationProperties(prefix = "conditions.devices")
 public class ConditionSettings {
-    private Map<String, DeviceCondition> devices;
-
-    @Getter
-    @Setter
-    public static class DeviceCondition {
-        private int unoccupiedDuration;
-        private int temperatureThreshold;
-        private int illuminanceThreshold;
-        private int occupancy;
-        private int temperature;
-        private int co2;
-    }
+    private String unoccupiedDuration;
+    private String temperatureThreshold;
+    private String illuminanceThreshold;
+    private String occupancy;
+    private String temperature;
+    private String co2;
 
 }

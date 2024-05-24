@@ -1,6 +1,7 @@
 package live.smoothing.actuator.listener;
 
-import live.smoothing.actuator.config.ConditionSettings;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.service.ConditionSettingsService;
 import live.smoothing.actuator.dto.DataDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,9 +14,11 @@ public class TemperatureListener extends BaseListener {
 
     public TemperatureListener(RabbitTemplate rabbitTemplate,
                                ApplicationContext applicationContext,
-                               ConditionSettingsService conditionSettingsService) {
+                               ConditionSettingsService conditionSettingsService,
+                               ObjectMapper objectMapper,
+                               RabbitMQProperties properties) {
 
-        super(rabbitTemplate, applicationContext, conditionSettingsService);
+        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper);
     }
 
     @RabbitListener(queues = "temperature-queue")
@@ -24,7 +27,7 @@ public class TemperatureListener extends BaseListener {
     }
 
     @Override
-    protected String createControlMessage(DataDTO data, ConditionSettings.DeviceCondition settings) {
+    protected String createControlMessage(DataDTO data) {
 
         return "";
     }

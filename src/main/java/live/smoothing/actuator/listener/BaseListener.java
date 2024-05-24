@@ -2,13 +2,12 @@ package live.smoothing.actuator.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import live.smoothing.actuator.checker.ConditionChecker;
-import live.smoothing.actuator.config.ConditionSettings;
+import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
-
 
 @RequiredArgsConstructor
 public abstract class BaseListener {
@@ -16,22 +15,24 @@ public abstract class BaseListener {
     protected final RabbitTemplate rabbitTemplate;
     protected final ApplicationContext applicationContext;
     protected final ConditionSettingsService conditionSettingsService;
+    protected final RabbitMQProperties properties;
+    protected final ObjectMapper objectMapper;
 
     protected void handleMessage(String message, String conditionCheckerBeanName) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            DataDTO data = mapper.readValue(message, DataDTO.class);
+            DataDTO data = objectMapper.readValue(message, DataDTO.class);
 
             ConditionChecker checker = (ConditionChecker) applicationContext.getBean(conditionCheckerBeanName);
-            ConditionSettings.DeviceCondition settings = conditionSettingsService.getDeviceCondition(data.getDevice());
 
-            if(checker.checkCondition(data, settings)) {
-                String controlMessage =  createControlMessage(data, settings);
-                rabbitTemplate.convertAndSend("actuator-queue", controlMessage);
+            if(checker.checkCondition(data)) {
+                String controlMessage =  createControlMessage(data);
+                rabbitTemplate.convertAndSend(properties.getExchangeName(), properties.getRoutingKey(), controlMessage);
             }
 
-        } catch(Exception e) {}
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    protected abstract String createControlMessage(DataDTO data, ConditionSettings.DeviceCondition settings);
+    protected abstract String createControlMessage(DataDTO data);
 }
