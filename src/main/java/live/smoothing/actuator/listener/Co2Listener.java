@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
+import live.smoothing.actuator.service.ControlHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -18,9 +19,10 @@ public class Co2Listener extends BaseListener {
                        ApplicationContext applicationContext,
                        ConditionSettingsService conditionSettingsService,
                        RabbitMQProperties properties,
-                       ObjectMapper objectMapper) {
+                       ObjectMapper objectMapper,
+                       ControlHistoryService controlHistoryService) {
 
-        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper);
+        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper, controlHistoryService);
     }
 
     @RabbitListener(queues = "#{rabbitMQProperties.co2queueName}")

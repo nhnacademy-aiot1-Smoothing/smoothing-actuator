@@ -5,10 +5,13 @@ import live.smoothing.actuator.checker.ConditionChecker;
 import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
+import live.smoothing.actuator.service.ControlHistoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class BaseListener {
 
@@ -17,6 +20,7 @@ public abstract class BaseListener {
     protected final ConditionSettingsService conditionSettingsService;
     protected final RabbitMQProperties properties;
     protected final ObjectMapper objectMapper;
+    protected final ControlHistoryService controlHistoryService;
 
     protected void handleMessage(String message, String conditionCheckerBeanName) {
         try {
@@ -27,10 +31,14 @@ public abstract class BaseListener {
             if(checker.checkCondition(data)) {
                 String controlMessage =  createControlMessage(data);
                 rabbitTemplate.convertAndSend(properties.getExchangeName(), properties.getRoutingKey(), controlMessage);
+
+                controlHistoryService.save(data.getDevice(), controlMessage);
+
+                log.info("Control message sent: {}", controlMessage);
             }
 
         } catch(Exception e) {
-            e.printStackTrace();
+            log.error("Error while handling message: {}", e.getMessage());
         }
     }
 
