@@ -1,29 +1,40 @@
 package live.smoothing.actuator.service;
 
 import live.smoothing.actuator.config.ConditionSettings;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ConditionSettingsService {
 
-    private final Map<String, ConditionSettings.DeviceCondition> deviceConditions = new ConcurrentHashMap<>();
+    private final ConditionSettings conditionSettings;
 
-    public ConditionSettingsService(ConditionSettings settings) {
-        this.deviceConditions.putAll(settings.getDevices());
+    public ConditionSettingsService(@Qualifier("conditionSettings") ConditionSettings conditionSettings) {
+        this.conditionSettings = conditionSettings;
     }
 
-    public ConditionSettings.DeviceCondition getDeviceCondition(String device) {
-        return deviceConditions.get(device);
+    public ConditionSettings getConditionSettings() {
+        return conditionSettings;
     }
 
-    public void updateDeviceCondition(String device, ConditionSettings.DeviceCondition newCondition) {
-        deviceConditions.put(device, newCondition);
-    }
-
-    public Map<String, ConditionSettings.DeviceCondition> getAllDeviceConditions() {
-        return deviceConditions;
+    public void updateCondition(String unoccupiedDuration, String temperatureThreshold, String illuminanceThreshold, String occupancy, String temperature, String co2) {
+        if (unoccupiedDuration != null) {
+            conditionSettings.setUnoccupiedDuration(unoccupiedDuration);
+        }
+        if (temperatureThreshold != null) {
+            conditionSettings.setTemperatureThreshold(temperatureThreshold);
+        }
+        if (illuminanceThreshold != null) {
+            conditionSettings.setIlluminanceThreshold(illuminanceThreshold);
+        }
+        if (occupancy != null) {
+            conditionSettings.setOccupancy(occupancy);
+        }
+        if (temperature != null) {
+            conditionSettings.setTemperature(temperature);
+        }
+        if (co2 != null) {
+            conditionSettings.setCo2(co2);
+        }
     }
 }

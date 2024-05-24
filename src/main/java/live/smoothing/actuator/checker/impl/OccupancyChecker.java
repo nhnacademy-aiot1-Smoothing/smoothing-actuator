@@ -1,8 +1,8 @@
 package live.smoothing.actuator.checker.impl;
 
 import live.smoothing.actuator.checker.ConditionChecker;
-import live.smoothing.actuator.config.ConditionSettings;
 import live.smoothing.actuator.dto.DataDTO;
+import live.smoothing.actuator.service.ConditionSettingsService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,11 +19,18 @@ public class OccupancyChecker implements ConditionChecker {
     private Map<String, LocalDateTime> lastOccupiedMap = new HashMap<>();
     private Map<String, Integer> countMap = new HashMap<>();
 
+    private final ConditionSettingsService settingsService;
+
+    public OccupancyChecker(ConditionSettingsService settingsService) {
+
+        this.settingsService = settingsService;
+    }
+
     @Override
-    public boolean checkCondition(DataDTO data, ConditionSettings.DeviceCondition settings) {
+    public boolean checkCondition(DataDTO data) {
         int value = Integer.parseInt(data.getValue());
         String location = data.getLocation();
-        int requiredValue = settings.getOccupancy();
+        int requiredValue = Integer.parseInt(settingsService.getConditionSettings().getOccupancy());
 
         if(value == requiredValue) {
             lastOccupiedMap.put(location, data.getTime());
@@ -34,7 +41,7 @@ public class OccupancyChecker implements ConditionChecker {
             Integer lastCount = countMap.get(location);
 
             if((lastTime != null) && (lastCount != null) && (lastCount == requiredValue)) {
-                return lastTime.plusMinutes(settings.getUnoccupiedDuration()).isBefore(LocalDateTime.now());
+                return lastTime.plusMinutes(Long.parseLong(settingsService.getConditionSettings().getUnoccupiedDuration())).isBefore(LocalDateTime.now());
             } else {
                 return false;
             }

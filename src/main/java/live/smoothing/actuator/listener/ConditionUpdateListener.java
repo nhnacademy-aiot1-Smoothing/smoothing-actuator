@@ -1,7 +1,6 @@
 package live.smoothing.actuator.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import live.smoothing.actuator.config.ConditionSettings;
 import live.smoothing.actuator.service.ConditionSettingsService;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,15 +23,28 @@ public class ConditionUpdateListener {
             ObjectMapper mapper = new ObjectMapper();
             ConditionUpdatePayload payload = mapper.readValue(message, ConditionUpdatePayload.class);
 
-            conditionSettingsService.updateDeviceCondition(payload.getDevice(), payload.getNewCondition());
+            conditionSettingsService.updateCondition(
+                    payload.getUnoccupiedDuration(),
+                    payload.getTemperatureThreshold(),
+                    payload.getIlluminanceThreshold(),
+                    payload.getOccupancy(),
+                    payload.getTemperature(),
+                    payload.getCo2()
+            );
 
-        } catch(Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Getter
     @Setter
     private static class ConditionUpdatePayload {
-        private String device;
-        private ConditionSettings.DeviceCondition newCondition;
+        private String unoccupiedDuration;
+        private String temperatureThreshold;
+        private String illuminanceThreshold;
+        private String occupancy;
+        private String temperature;
+        private String co2;
     }
 }
