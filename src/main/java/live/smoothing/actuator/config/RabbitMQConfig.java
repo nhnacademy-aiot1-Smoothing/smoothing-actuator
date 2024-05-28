@@ -6,6 +6,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * RabbitMQConfig
+ *
+ * @author 신민석
+ */
 @Configuration
 public class RabbitMQConfig {
 
