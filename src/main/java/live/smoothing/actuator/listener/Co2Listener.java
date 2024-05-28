@@ -36,6 +36,6 @@ public class Co2Listener extends BaseListener {
     @Override
     protected String createControlMessage(DataDTO data) {
 
-        return "red";
+        return "green";
     }
 }
