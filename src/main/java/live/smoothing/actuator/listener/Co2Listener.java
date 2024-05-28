@@ -28,6 +28,7 @@ public class Co2Listener extends BaseListener {
     @RabbitListener(queues = "#{rabbitMQProperties.co2queueName}")
     public void receiveMessage(String message) {
         log.info("Received message from co2-queue: {}", message);
+        log.info(message);
         handleMessage(message, "co2Checker");
 
     }

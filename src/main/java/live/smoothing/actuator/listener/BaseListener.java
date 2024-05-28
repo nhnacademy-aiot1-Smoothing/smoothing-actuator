@@ -11,6 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * BaseListener
+ *
+ * @author 신민석
+ */
 @Slf4j
 @RequiredArgsConstructor
 public abstract class BaseListener {

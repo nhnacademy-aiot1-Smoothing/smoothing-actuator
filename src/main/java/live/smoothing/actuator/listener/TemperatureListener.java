@@ -10,6 +10,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+/**
+ * 온도 리스너
+ *
+ * @author 신민석
+ */
 @Service
 public class TemperatureListener extends BaseListener {
 

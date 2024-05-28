@@ -7,6 +7,11 @@ import lombok.Setter;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
+/**
+ * 조건 설정을 업데이트하는 리스터
+ *
+ * @author 신민석
+ */
 @Service
 public class ConditionUpdateListener {
 

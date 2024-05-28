@@ -27,7 +27,7 @@ public class IlluminanceListener extends BaseListener {
 
     @RabbitListener(queues = "illuminance-queue")
     public void receiveMessage(String message) {
-        log.info("Received Message from illuminance-queue");
+        log.info("Received Message from [illuminance-queue]: {}", message);
         handleMessage(message, "illuminanceChecker");
     }
 
