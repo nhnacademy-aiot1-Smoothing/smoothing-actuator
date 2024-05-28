@@ -4,11 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import live.smoothing.actuator.config.RabbitMQProperties;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
+import live.smoothing.actuator.service.ControlHistoryService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+/**
+ * 재실 리스너
+ *
+ * @author 신민석
+ */
 @Service
 public class OccupancyListener extends BaseListener{
 
@@ -16,9 +22,10 @@ public class OccupancyListener extends BaseListener{
                              ApplicationContext applicationContext,
                              ConditionSettingsService conditionSettingsService,
                              ObjectMapper objectMapper,
-                             RabbitMQProperties properties) {
+                             RabbitMQProperties properties,
+                             ControlHistoryService controlHistoryService) {
 
-        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper);
+        super(rabbitTemplate, applicationContext, conditionSettingsService, properties, objectMapper, controlHistoryService);
     }
 
     @RabbitListener(queues = "occupancy-queue")

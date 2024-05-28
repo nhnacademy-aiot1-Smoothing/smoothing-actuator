@@ -4,6 +4,11 @@ import live.smoothing.actuator.config.ConditionSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+/**
+ * 조건 설정 서비스
+ *
+ * @author 신민석
+ */
 @Service
 public class ConditionSettingsService {
 

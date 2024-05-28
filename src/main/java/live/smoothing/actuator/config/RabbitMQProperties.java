@@ -5,6 +5,11 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * RabbitMQ 설정 클래스
+ *
+ * @author 신민석
+ */
 @Getter
 @Setter
 @Configuration

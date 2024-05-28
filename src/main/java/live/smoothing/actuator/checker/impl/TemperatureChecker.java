@@ -5,6 +5,11 @@ import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.service.ConditionSettingsService;
 import org.springframework.stereotype.Component;
 
+/**
+ * 조도 데이터로 조건의 true/false 판단
+ *
+ * @author 신민석
+ */
 @Component("temperatureChecker")
 public class TemperatureChecker implements ConditionChecker {
 
