@@ -6,6 +6,11 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * 디바이스 제어 이력을 위한 엔티티
+ *
+ * @autor 신민석
+ */
 @Getter
 @Setter
 @Entity
