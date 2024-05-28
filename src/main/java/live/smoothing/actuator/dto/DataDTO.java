@@ -5,6 +5,11 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * data에서 필요한 정보를 담는 DTO
+ *
+ * @author 신민석
+ */
 @Getter
 @Setter
 public class DataDTO {
