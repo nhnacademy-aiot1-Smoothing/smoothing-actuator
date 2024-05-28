@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * 제어 이력 서비스
+ *
+ * @author 신민석
+ */
 @Service
 @AllArgsConstructor
 public class ControlHistoryService {
@@ -18,5 +23,9 @@ public class ControlHistoryService {
         history.setDevice(device);
         history.setControlMessage(controlMessage);
         history.setTime(LocalDateTime.now());
+
+        repository.save(history);
     }
+
+
 }
