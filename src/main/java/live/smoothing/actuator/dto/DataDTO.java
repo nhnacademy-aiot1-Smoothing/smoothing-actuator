@@ -1,7 +1,5 @@
 package live.smoothing.actuator.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,20 +17,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataDTO {
-    private String device;
-    private String value;
     private String location;
+    private String device;
+    private String event;
+    private String value;
     private LocalDateTime time;
-
-//    @JsonCreator
-//    public DataDTO(
-//            @JsonProperty("location") String location,
-//            @JsonProperty("time") LocalDateTime time,
-//            @JsonProperty("device") String device,
-//            @JsonProperty("value") String value) {
-//        this.location = location;
-//        this.time = time;
-//        this.device = device;
-//        this.value = value;
-//    }
 }
