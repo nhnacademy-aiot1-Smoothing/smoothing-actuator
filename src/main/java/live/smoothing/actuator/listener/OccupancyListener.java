@@ -1,4 +1,4 @@
-package live.smoothing.actuator.listener.mq;
+package live.smoothing.actuator.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import live.smoothing.actuator.listener.BaseListener;
