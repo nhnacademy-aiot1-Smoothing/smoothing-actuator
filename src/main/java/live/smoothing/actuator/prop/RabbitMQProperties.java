@@ -1,4 +1,4 @@
-package live.smoothing.actuator.config;
+package live.smoothing.actuator.prop;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +21,6 @@ public class RabbitMQProperties {
     @Value("${spring.rabbitmq.port}")
     private int port;
 
-    @Value("${spring.rabbitmq.queueName}")
-    private String queueName;
-
-    @Value("${spring.rabbitmq.routingKey}")
-    private String routingKey;
-
     @Value("${spring.rabbitmq.virtualHost}")
     private String virtualHost;
 
@@ -38,10 +32,4 @@ public class RabbitMQProperties {
 
     @Value("${spring.rabbitmq.exchangeName}")
     private String exchangeName;
-
-    @Value("${spring.rabbitmq.co2queueName}")
-    private String co2queueName;
-
-    @Value("${spring.rabbitmq.co2routingKey}")
-    private String co2routingKey;
 }
