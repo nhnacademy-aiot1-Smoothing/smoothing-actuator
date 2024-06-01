@@ -1,8 +1,10 @@
 package live.smoothing.actuator.config;
 
+import live.smoothing.actuator.prop.RabbitMQProperties;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +17,15 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     private final RabbitMQProperties properties;
+
+    @Value("${queue.occupancy}")
+    private String occupancyQueueName;
+
+    @Value("${queue.magnet}")
+    private String magnetQueueName;
+
+    @Value("${queue.illuminance}")
+    private String illuminanceQueueName;
 
     public RabbitMQConfig(RabbitMQProperties properties) {
         this.properties = properties;
@@ -37,7 +48,17 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue co2Queue() {
-        return new Queue(properties.getCo2queueName(), true);
+    public Queue illuminanceQueue() {
+        return new Queue(illuminanceQueueName, true);
+    }
+
+    @Bean
+    public Queue magnetQueue() {
+        return new Queue(magnetQueueName, true);
+    }
+
+    @Bean
+    public Queue occupancyQueue() {
+        return new Queue(occupancyQueueName, true);
     }
 }

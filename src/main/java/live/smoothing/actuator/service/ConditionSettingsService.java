@@ -1,8 +1,16 @@
 package live.smoothing.actuator.service;
 
-import live.smoothing.actuator.config.ConditionSettings;
-import org.springframework.beans.factory.annotation.Qualifier;
+import live.smoothing.actuator.dto.ModifyTimoutConditionRequest;
+import live.smoothing.actuator.dto.TimeoutResponse;
+import live.smoothing.actuator.entity.ControlDevice;
+import live.smoothing.actuator.entity.ControlElement;
+import live.smoothing.actuator.prop.ConditionProperties;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 /**
  * 조건 설정 서비스
@@ -10,36 +18,43 @@ import org.springframework.stereotype.Service;
  * @author 신민석
  */
 @Service
+@RequiredArgsConstructor
 public class ConditionSettingsService {
 
-    private final ConditionSettings conditionSettings;
+    private final ConditionProperties conditionProperties;
+    private final RedisTemplate<String, Long> longRedisTemplate;
+    private final ControlDeviceService controlDeviceService;
 
-    public ConditionSettingsService(@Qualifier("conditionSettings") ConditionSettings conditionSettings) {
-        this.conditionSettings = conditionSettings;
+    public void modifyIlluminationTimeout(ModifyTimoutConditionRequest request) {
+        String device = request.getEui();
+        Long timeout = request.getTimeout();
+
+        if (timeout <= 0) {
+            throw new IllegalArgumentException("0 또는 음수");
+        }
+
+        ControlDevice controlDevice = controlDeviceService.findByEui(device);
+        ControlElement controlElement = controlDevice.getControlElement();
+        String place = controlElement.getPlace();
+        String elementDevice = controlElement.getDevice();
+        String event = controlElement.getEvent();
+
+        longRedisTemplate.opsForValue().set(String.join("-", place, elementDevice, event, conditionProperties.getTimeoutKey()), timeout);
     }
 
-    public ConditionSettings getConditionSettings() {
-        return conditionSettings;
-    }
+    public TimeoutResponse getTimeout(String eui) {
+        ControlDevice controlDevice = controlDeviceService.findByEui(eui);
+        ControlElement controlElement = controlDevice.getControlElement();
+        String place = controlElement.getPlace();
+        String elementDevice = controlElement.getDevice();
+        String event = controlElement.getEvent();
 
-    public void updateCondition(String unoccupiedDuration, String temperatureThreshold, String illuminanceThreshold, String occupancy, String temperature, String co2) {
-        if (unoccupiedDuration != null) {
-            conditionSettings.setUnoccupiedDuration(unoccupiedDuration);
+        Long timeout = longRedisTemplate.opsForValue().get(String.join("-", place, elementDevice, event, conditionProperties.getTimeoutKey()));
+
+        if (Objects.isNull(timeout)) {
+            return new TimeoutResponse(conditionProperties.getDefaultTimeout());
         }
-        if (temperatureThreshold != null) {
-            conditionSettings.setTemperatureThreshold(temperatureThreshold);
-        }
-        if (illuminanceThreshold != null) {
-            conditionSettings.setIlluminanceThreshold(illuminanceThreshold);
-        }
-        if (occupancy != null) {
-            conditionSettings.setOccupancy(occupancy);
-        }
-        if (temperature != null) {
-            conditionSettings.setTemperature(temperature);
-        }
-        if (co2 != null) {
-            conditionSettings.setCo2(co2);
-        }
+
+        return new TimeoutResponse(timeout);
     }
 }

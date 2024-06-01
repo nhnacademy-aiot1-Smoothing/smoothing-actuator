@@ -1,7 +1,9 @@
 package live.smoothing.actuator.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,20 +11,23 @@ import java.time.LocalDateTime;
 /**
  * 디바이스 제어 이력을 위한 엔티티
  *
- * @autor 신민석
+ * @autor 박영준, 신민석
  */
 @Getter
-@Setter
 @Entity
 @Table(name = "control_history")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ControlHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String device;
-    private String controlMessage;
+    private String eui;
+
     private LocalDateTime time;
 
+    private String message;
 }

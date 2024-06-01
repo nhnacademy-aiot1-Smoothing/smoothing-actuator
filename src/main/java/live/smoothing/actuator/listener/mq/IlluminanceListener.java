@@ -1,4 +1,4 @@
-package live.smoothing.actuator.listener;
+package live.smoothing.actuator.listener.mq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import live.smoothing.actuator.listener.BaseListener;
@@ -14,27 +14,23 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-/**
- * 재실 리스너
- *
- * @author 신민석
- */
 @Slf4j
 @Service
-public class OccupancyListener extends BaseListener {
+public class IlluminanceListener extends BaseListener {
 
-    public OccupancyListener(RabbitTemplate rabbitTemplate, ApplicationContext applicationContext, RabbitMQProperties properties, ObjectMapper objectMapper, ConditionProperties conditionProperties, ControlHistoryService controlHistoryService, ConditionSettingsService conditionSettingsService, ControlElementService controlElementService, RedisTemplate<String, Boolean> redisTemplate) {
+    public IlluminanceListener(RabbitTemplate rabbitTemplate, ApplicationContext applicationContext, RabbitMQProperties properties, ObjectMapper objectMapper, ConditionProperties conditionProperties, ControlHistoryService controlHistoryService, ConditionSettingsService conditionSettingsService, ControlElementService controlElementService, RedisTemplate<String, Boolean> redisTemplate) {
         super(rabbitTemplate, applicationContext, properties, objectMapper, conditionProperties, controlHistoryService, conditionSettingsService, controlElementService, redisTemplate);
     }
 
-    @RabbitListener(queues = "${queue.occupancy}")
+    @RabbitListener(queues = "${queue.illuminance}")
     public void receiveMessage(String message) {
-        log.info("Received Message from [occupancy-queue]: {}", message);
-        handleMessage(message, "occupancyChecker");
+        log.info("Received Message from [illuminance-queue]: {}", message);
+        handleMessage(message, "illuminanceChecker");
     }
 
     @Override
     protected String createControlMessage(String device) {
-        return "";
+        controlHistoryService.save(device, "조도 센서에 의해 제어 되었습니다.");
+        return "green";
     }
 }
