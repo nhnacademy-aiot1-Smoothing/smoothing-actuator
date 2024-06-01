@@ -18,9 +18,9 @@ import java.util.Objects;
  * @author 신민석
  */
 @Slf4j
-@Component("illuminanceChecker")
+@Component("activateChecker")
 @RequiredArgsConstructor
-public class IlluminanceChecker implements ConditionChecker {
+public class ActivateChecker implements ConditionChecker {
 
     private final RedisTemplate<String, LocalDateTime> timeRedisTemplate;
     private final RedisTemplate<String, String> customStringRedisTemplate;
@@ -29,48 +29,52 @@ public class IlluminanceChecker implements ConditionChecker {
 
     @Override
     public boolean checkCondition(DataDTO data) {
+        String place = data.getLocation();
+        String device = data.getDevice();
+        String event = data.getEvent();
+
         String activateStartTimeKey = String.join("-",
-                data.getLocation(),
-                data.getDevice(),
-                data.getEvent(),
+                place,
+                device,
+                event,
                 conditionProperties.getStartTimeKey()
         );
 
         String activateTimeoutKey = String.join("-",
-                data.getLocation(),
-                data.getDevice(),
-                data.getEvent(),
+                place,
+                device,
+                event,
                 conditionProperties.getTimeoutKey()
         );
 
+        //TODO: 꺼져 있으면 넘기기
+
         // 재실 여부 가져오기
         String occupancyKey = String.join("-", data.getLocation(), conditionProperties.getOccupancyKey());
-        String occupancyValue = customStringRedisTemplate.opsForValue().get(occupancyKey);
+        String occupancyValue =  customStringRedisTemplate.opsForValue().get(occupancyKey);
 
         // 사람이 있거나 값이 아예 없는 경우
         if (conditionProperties.getOccupancyValue().equals(occupancyValue)) {
             return false;
         }
 
-        double illumination = Double.parseDouble(data.getValue());
-
-        if (illumination > conditionProperties.getIlluminationThreshold()) {
-            // 조명 켜기 시작한 값 들고오기
+        if ("open".equals(data.getValue())) {
+            // 에어컨 시작 값 들고오기
             LocalDateTime activateStartTime = timeRedisTemplate.opsForValue().get(activateStartTimeKey);
-            log.error("Illumination activateStartTime: {}", activateStartTime);
-            log.error("Illumination data.getTime(): {}", data.getTime());
+            log.error("Magnet activateStartTime: {}", activateStartTime);
+            log.error("Magnet data.getTime(): {}", data.getTime());
 
-            // 조명을 킨 적이 없다면
+            // 에어컨을 킨 적이 없다면
             if (Objects.isNull(activateStartTime)) {
                 timeRedisTemplate.opsForValue().set(activateStartTimeKey, data.getTime());
                 return false;
             }
 
-            // 설정 값과 조명 켜기 시작 값 차이 계산
+            // 설정 값과 에어컨 시작 값 차이 계산
             Duration duration = Duration.between(activateStartTime, data.getTime());
-            Long timeout = longRedisTemplate.opsForValue().get(activateTimeoutKey);
+            Long timeout =  longRedisTemplate.opsForValue().get(activateTimeoutKey);
 
-            log.error("Illumination duration: {}", duration);
+            log.error("Magnet duration: {}", duration);
 
             // 설정된 값이 없다면
             if (Objects.isNull(timeout)) {
@@ -79,7 +83,7 @@ public class IlluminanceChecker implements ConditionChecker {
 
             // 타임 아웃된 경우
             if (duration.toMinutes() > timeout) {
-                customStringRedisTemplate.delete(activateStartTimeKey);
+                timeRedisTemplate.delete(activateStartTimeKey);
                 return true;
             }
         }
