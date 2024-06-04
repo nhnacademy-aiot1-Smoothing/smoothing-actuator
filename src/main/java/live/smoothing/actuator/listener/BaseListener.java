@@ -5,6 +5,7 @@ import live.smoothing.actuator.checker.ConditionChecker;
 import live.smoothing.actuator.dto.DataDTO;
 import live.smoothing.actuator.entity.ControlDevice;
 import live.smoothing.actuator.entity.ControlElement;
+import live.smoothing.actuator.exception.FailControlDeviceException;
 import live.smoothing.actuator.prop.ConditionProperties;
 import live.smoothing.actuator.prop.RabbitMQProperties;
 import live.smoothing.actuator.service.ConditionSettingsService;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 
 import java.util.Objects;
 
@@ -59,7 +61,8 @@ public abstract class BaseListener {
             }
 
         } catch(Exception e) {
-            log.error("Error while handling message: {}", e.getMessage());
+            controlHistoryService.save("ERROR", "디바이스 제어에 실패했습니다.");
+            throw new FailControlDeviceException(HttpStatus.INTERNAL_SERVER_ERROR, "디바이스 제어에 실패했습니다.");
         }
     }
 

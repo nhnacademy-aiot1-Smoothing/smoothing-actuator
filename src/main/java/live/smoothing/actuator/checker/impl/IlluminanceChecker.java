@@ -78,7 +78,7 @@ public class IlluminanceChecker implements ConditionChecker {
             }
 
             // 타임 아웃된 경우
-            if (duration.toMinutes() > timeout) {
+            if (duration.toMinutes() + 1L > timeout) {
                 customStringRedisTemplate.delete(activateStartTimeKey);
                 return true;
             }

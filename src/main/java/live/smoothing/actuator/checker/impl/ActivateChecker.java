@@ -25,6 +25,7 @@ public class ActivateChecker implements ConditionChecker {
     private final RedisTemplate<String, LocalDateTime> timeRedisTemplate;
     private final RedisTemplate<String, String> customStringRedisTemplate;
     private final RedisTemplate<String, Long> longRedisTemplate;
+    private final RedisTemplate<String, Boolean> booleanRedisTemplate;
     private final ConditionProperties conditionProperties;
 
     @Override
@@ -46,8 +47,6 @@ public class ActivateChecker implements ConditionChecker {
                 event,
                 conditionProperties.getTimeoutKey()
         );
-
-        //TODO: 꺼져 있으면 넘기기
 
         // 재실 여부 가져오기
         String occupancyKey = String.join("-", data.getLocation(), conditionProperties.getOccupancyKey());
@@ -82,7 +81,7 @@ public class ActivateChecker implements ConditionChecker {
             }
 
             // 타임 아웃된 경우
-            if (duration.toMinutes() > timeout) {
+            if (duration.toMinutes() + 1L > timeout) {
                 timeRedisTemplate.delete(activateStartTimeKey);
                 return true;
             }
