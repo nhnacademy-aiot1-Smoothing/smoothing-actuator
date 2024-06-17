@@ -25,7 +25,7 @@ jobs:
 # SonarQube
     - name : Run SonarQube
       if: ${{ success() }}
-      run : ${{ secrets.SONAR_COMMAND }}
+      run : mvn sonar:sonar -Dsonar.projectKey=practice -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.login=${{secrets.SONAR_TOKEN}}
 
 # CD
     - name: upload file
@@ -48,5 +48,13 @@ jobs:
         username: ${{ secrets.SSH_ID }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script_stop: true
-        script: "./start.sh"
+        script: |
+          sudo docker build -t actuator:latest ./ --build-arg FILE=target/actuator-0.0.1-SNAPSHOT.jar
+          containers=$(sudo docker ps -a | grep actuator | awk '{print $1}')
+          if [ -n "$containers" ]; then
+            sudo docker stop $containers
+            sudo docker rm $containers
+          else
+            echo "No containers with 'actuator' found."
+          fi
+          sudo docker run -d --name actuator-service --network=smoothing --restart always actuator
